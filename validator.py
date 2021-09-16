@@ -45,13 +45,13 @@ class validatorScreen(QMainWindow):
         with open(config_file, "r") as f:
             config = yaml.safe_load(f)
             API_DATA = [i["API_DATA"] for i in config]
-            # conf = str(list(API_DATA.values()))[1:-1]
         return API_DATA
 
     def is_valid_number(self, thread_name, pnumbers):
         try:
             cred = self.load_conf_file('config.yml')
             for pnumber in pnumbers:
+                self.updateStatus('validating...')
                 authid = random.randint(0, len(cred) - 1)
                 client = Client(cred[authid]['TWILIO_ACCOUNT_SID'], cred[authid]['TWILIO_AUTH_TOKEN'])
                 response = client.lookups.phone_numbers(pnumber).fetch(type="carrier")
@@ -71,6 +71,9 @@ class validatorScreen(QMainWindow):
                 print(f'Number: {pnumber} is invalid')
             else:
                 raise e
+        except:
+            self.updateStatus('Failed...')
+            self.status_label.setStyleSheet('color: red')
 
     def goto_homepage(self):
         homes = Home()
@@ -109,7 +112,6 @@ class validatorScreen(QMainWindow):
         return (a[i * k + min(i, m):(i + 1) * k + min(i + 1, m)] for i in range(n))
 
     def verify_thread(self):
-        self.updateStatus('validating...')
         f = open('generate.txt', 'r').read().splitlines()
         l = list(self.splitter(f, 5))
         t1 = threading.Thread(target=self.is_valid_number, args=("thread1", l[0]))
@@ -141,31 +143,46 @@ class smsScreen(QMainWindow):
         self.upload_btn.clicked.connect(self.browse_files)
         self.send_sms.clicked.connect(self.sms_sender)
 
+    def load_conf_file(self, config_file):
+        with open(config_file, "r") as f:
+            config = yaml.safe_load(f)
+            API_DATA = [i["API_DATA"] for i in config]
+        return API_DATA
+
     def goto_homepage(self):
         homes = Home()
         widget.addWidget(homes)
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
-    def sms_sender(self, phone_numbers_to_send):
-        for single_phone in phone_numbers_to_send:
-            cred = self.load_conf_file('config.yml')
-            authid = random.randint(0, len(cred) - 1)
-            client = Client(cred[authid]['TWILIO_ACCOUNT_SID'], cred[authid]['TWILIO_AUTH_TOKEN'])
-
-            message = client.messages \
-                .create(
-                body=self.sms_box.text(),
-                from_=self.sender_no.text(),
-                to=single_phone
-            )
-            status = self.send_status.setText(message.status)
-            print(message.status)
+    nbrs = []
 
     def browse_files(self):
         filename, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Single File', QtCore.QDir.currentPath(), '*.txt')
         f = open(filename, 'r').read().splitlines()
-        print(f)
-        return filename
+        nb = [self.nbrs.append(nb) for nb in f]
+        counter = len(f)
+        self.number_count.setText(f'Uploaded {counter} Numbers')
+        return f
+
+    def sms_sender(self, phone_numbers_to_send):
+        phone_numbers_to_send = self.nbrs
+        for single_phone in phone_numbers_to_send:
+            time.sleep(2)
+            try:
+                cred = self.load_conf_file('config.yml')
+                client = Client(cred[1]['TWILIO_ACCOUNT_SID'], cred[1]['TWILIO_AUTH_TOKEN'])
+                message = client.messages.create(
+                    body=self.sms_box.toPlainText(),
+                    from_='+18479840485',
+                    to='+' + single_phone
+                )
+                status = self.send_status.setText(message.status)
+                time.sleep(3)
+                status = self.send_status.setText('Send successfully')
+
+            except:
+                status = self.send_status.setText(f'Unable to send to +{single_phone} check your number')
+                self.send_status.setStyleSheet('color: red')
 
 
 # main

@@ -125,7 +125,7 @@ font: 16pt &quot;Baskerville Old Face&quot;;</string>
       <string notr="true">font: 26pt &quot;Baskerville Old Face&quot;;</string>
      </property>
      <property name="text">
-      <string>PHONR NUMBER GENERATOR</string>
+      <string>PHONE NUMBER GENERATOR</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

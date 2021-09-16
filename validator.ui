@@ -111,6 +111,9 @@ font: 16pt &quot;Baskerville Old Face&quot;;</string>
        <bold>true</bold>
       </font>
      </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(0, 170, 0);</string>
+     </property>
      <property name="text">
       <string>Ready to start</string>
      </property>
