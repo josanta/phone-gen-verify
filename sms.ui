@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>851</width>
+    <height>621</height>
+   </rect>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>851</width>
+    <height>621</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Phone Validator</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>851</width>
+      <height>620</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>851</width>
+      <height>621</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 255, 255);</string>
+    </property>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>850</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(0, 85, 255, 208);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>530</y>
+       <width>850</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(0, 85, 255, 208);
+color: rgb(255, 255, 255);
+font: 16pt &quot;Baskerville Old Face&quot;;</string>
+     </property>
+     <property name="text">
+      <string>SMS V1.1.0</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>90</y>
+       <width>841</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 26pt &quot;Baskerville Old Face&quot;;</string>
+     </property>
+     <property name="text">
+      <string>SEND MESSAGES</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>160</y>
+       <width>251</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bookman Old Style</family>
+       <pointsize>9</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Ready to start</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="send_sms">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>460</y>
+       <width>171</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton#send_sms{
+background-color: rgba(0, 85, 255, 208);
+color: rgb(255, 255, 255);
+border: none;
+ padding: 5px;
+ border-radius: 25px;
+}
+
+QPushButton#send_sms:hover{
+background-color: rgba(0,0,0,0.9)
+}</string>
+     </property>
+     <property name="text">
+      <string>Send</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="cancel_btn">
+     <property name="geometry">
+      <rect>
+       <x>420</x>
+       <y>460</y>
+       <width>171</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton#cancel_btn{
+background-color: rgba(0, 85, 255, 208);
+color: rgb(255, 255, 255);
+border: none;
+ padding: 5px;
+ border-radius: 25px;
+}
+
+QPushButton#cancel_btn:hover{
+background-color: rgba(0,0,0,0.9)
+}</string>
+     </property>
+     <property name="text">
+      <string>Cancel</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="back_sms">
+     <property name="geometry">
+      <rect>
+       <x>680</x>
+       <y>0</y>
+       <width>171</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton#back_sms{
+background-color: rgba(0, 85, 255, 208);
+color: rgb(255, 255, 255);
+border: none;
+ padding: 5px;
+}
+
+QPushButton#back_sms:hover{
+background-color: rgba(0,0,0,0.9)
+}</string>
+     </property>
+     <property name="text">
+      <string>Back</string>
+     </property>
+    </widget>
+    <widget class="QPlainTextEdit" name="sms_box">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>290</y>
+       <width>611</width>
+       <height>111</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bookman Old Style</family>
+       <pointsize>13</pointsize>
+      </font>
+     </property>
+     <property name="placeholderText">
+      <string>start typing....</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="upload_btn">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>200</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton#upload_btn{
+background-color: rgba(0,0,0,0.9);
+color: rgb(255, 255, 255);
+border: none;
+ padding: 5px;
+ border-radius: 25px;
+}
+
+QPushButton#upload_btn:hover{
+background-color: rgba(0, 85, 255, 208);
+}</string>
+     </property>
+     <property name="text">
+      <string>Upload numbers</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="sender_no">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>249</y>
+       <width>611</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bookman Old Style</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <italic>true</italic>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="placeholderText">
+      <string>Enter Sender Number...</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>851</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,2 +1,4 @@
 .idea
 config.yml
+numverify.py
+__pycache__/
