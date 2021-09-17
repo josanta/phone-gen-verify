@@ -316,7 +316,7 @@ background-color: red;
       </font>
      </property>
      <property name="text">
-      <string>Validate with username or without user name</string>
+      <string>Validate with username</string>
      </property>
     </widget>
    </widget>
