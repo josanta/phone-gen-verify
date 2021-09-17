@@ -55,28 +55,62 @@ class validatorScreen(QMainWindow):
 
     def is_valid_number(self, thread_name, pnumbers):
         try:
-            cred = self.load_conf_file('config.yml')
-            self.updateStatus('validating...')
-            for pnumber in pnumbers:
-                authid = random.randint(0, len(cred) - 1)
-                client = Client(cred[authid]['TWILIO_ACCOUNT_SID'], cred[authid]['TWILIO_AUTH_TOKEN'])
-                response = client.lookups.phone_numbers(pnumber).fetch(type="carrier")
-                try:
-                    nums = client.lookups.phone_numbers(pnumber).fetch(type="carrier")
-                    pattern = r'[/\<>"?:|*]'
-                    carrier = re.sub(pattern, '', nums.carrier['name'])
-                except:
-                    carrier = 'Unknown Carrier'
-                save_in = open(f'Carrier Verification/{carrier}.txt', 'a').writelines(str(pnumber) + '\n')
-                print(thread_name)
-                print(f'Number: {pnumber} is valid and Carrier is: {carrier}')
-            self.updateStatus(f'process completed successfully.')
+            if self.validate_check.isChecked():
+                cred = self.load_conf_file('config.yml')
+                self.updateStatus('validating...')
+                for pnumber in pnumbers:
+                    authid = random.randint(0, len(cred) - 1)
+                    client = Client(cred[authid]['TWILIO_ACCOUNT_SID'], cred[authid]['TWILIO_AUTH_TOKEN'])
+                    try:
+                        caller_name = client.lookups.v1.phone_numbers('15108675310').fetch(type=['caller-name'])
+                        c_name = caller_name.caller_name['caller_name']
+                    except TypeError:
+                        c_name = ''
+                    try:
+                        nums = client.lookups.phone_numbers(pnumber).fetch(type="carrier")
+                        pattern = r'[/\<>"?:|*]'
+                        carrier = re.sub(pattern, '', nums.carrier['name'])
+                    except:
+                        carrier = 'Unknown Carrier'
+                    if carrier == 'AT&T Wireless':
+                        p_nbr = f'{pnumber}@txt.att.net;{c_name}'
+                    elif carrier == 'Verizon Wireless':
+                        p_nbr = f'{pnumber}@vtext.com;{c_name}'
+                    else:
+                        p_nbr = f'{pnumber};{c_name}'
+                    save_in = open(f'Carrier Verification/{carrier}.txt', 'a').writelines(str(p_nbr) + '\n')
+                    print(thread_name)
+                    print(f'Number: {pnumber} is valid and Carrier is: {carrier}')
+                self.updateStatus(f'process completed successfully.')
+            else:
+                cred = self.load_conf_file('config.yml')
+                self.updateStatus('validating...')
+                for pnumber in pnumbers:
+                    authid = random.randint(0, len(cred) - 1)
+                    client = Client(cred[authid]['TWILIO_ACCOUNT_SID'], cred[authid]['TWILIO_AUTH_TOKEN'])
+                    try:
+                        nums = client.lookups.phone_numbers(pnumber).fetch(type="carrier")
+                        pattern = r'[/\<>"?:|*]'
+                        carrier = re.sub(pattern, '', nums.carrier['name'])
+                    except:
+                        carrier = 'Unknown Carrier'
+                    if carrier == 'AT&T Wireless':
+                        p_nbr = f'{pnumber}@txt.att.net;'
+                    elif carrier == 'Verizon Wireless':
+                        p_nbr = f'{pnumber}@vtext.com;'
+                    else:
+                        p_nbr = f'{pnumber};'
+                    save_in = open(f'Carrier Verification/{carrier}.txt', 'a').writelines(str(p_nbr) + '\n')
+                    print(thread_name)
+                    print(f'Number: {pnumber} is valid and Carrier is: {carrier}')
+                self.updateStatus(f'process completed successfully.')
 
         except TwilioRestException as e:
             if e.code == 20404:
                 print(f'Number: {pnumber} is invalid')
             else:
                 raise e
+
         except:
             self.updateStatus('Failed...')
             self.status_label.setStyleSheet('color: red')
