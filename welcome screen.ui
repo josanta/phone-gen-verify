@@ -80,7 +80,7 @@ background-color: rgba(0,0,0,0.9)
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>850</width>
+       <width>851</width>
        <height>51</height>
       </rect>
      </property>
@@ -166,6 +166,41 @@ background-color: rgba(0,0,0,0.9)
      </property>
      <property name="text">
       <string>SMS</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="settings">
+     <property name="geometry">
+      <rect>
+       <x>790</x>
+       <y>0</y>
+       <width>61</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>settings.ico</normaloff>settings.ico</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>60</width>
+       <height>60</height>
+      </size>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
      </property>
     </widget>
    </widget>

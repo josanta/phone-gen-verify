@@ -20,6 +20,7 @@ class Home(QMainWindow):
         loadUi('welcome screen.ui', self)
         self.verify_btn1.clicked.connect(self.goto_validator)
         self.sms_btn.clicked.connect(self.goto_sms)
+        self.settings.clicked.connect(self.goto_settings)
 
     def goto_validator(self):
         validate_screen = validatorScreen()
@@ -29,6 +30,11 @@ class Home(QMainWindow):
     def goto_sms(self):
         sms_screen = smsScreen()
         widget.addWidget(sms_screen)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def goto_settings(self):
+        settings_screen = settingsScreen()
+        widget.addWidget(settings_screen)
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
 
@@ -50,8 +56,8 @@ class validatorScreen(QMainWindow):
     def is_valid_number(self, thread_name, pnumbers):
         try:
             cred = self.load_conf_file('config.yml')
+            self.updateStatus('validating...')
             for pnumber in pnumbers:
-                self.updateStatus('validating...')
                 authid = random.randint(0, len(cred) - 1)
                 client = Client(cred[authid]['TWILIO_ACCOUNT_SID'], cred[authid]['TWILIO_AUTH_TOKEN'])
                 response = client.lookups.phone_numbers(pnumber).fetch(type="carrier")
@@ -103,15 +109,24 @@ class validatorScreen(QMainWindow):
         self.updateStatus(f'Generating....')
         country_code = self.country_code.text()
         service_code = self.service_code.text()
-        length = int(self.length.text())
-        number_bx = int(self.number.text())
-        self.generate(country_code, service_code, length, number_bx)
+        length = self.length.text()
+        number_bx = self.number.text()
+        if country_code == '' or service_code == '' or length == '' or number_bx == '':
+            self.updateStatus('Check your input all fields are required!')
+            self.status_label.setStyleSheet('color: red')
+        else:
+            self.updateStatus(f'Generating....')
+            self.status_label.setStyleSheet('color: green')
+            self.generate(country_code, service_code, int(length), int(number_bx))
 
     def splitter(self, a, n):
         k, m = divmod(len(a), n)
         return (a[i * k + min(i, m):(i + 1) * k + min(i + 1, m)] for i in range(n))
 
     def verify_thread(self):
+        self.updateStatus('validating...')
+        self.updateStatus('validating...')
+        self.updateStatus('validating...')
         f = open('generate.txt', 'r').read().splitlines()
         l = list(self.splitter(f, 5))
         t1 = threading.Thread(target=self.is_valid_number, args=("thread1", l[0]))
@@ -166,23 +181,91 @@ class smsScreen(QMainWindow):
 
     def sms_sender(self, phone_numbers_to_send):
         phone_numbers_to_send = self.nbrs
-        for single_phone in phone_numbers_to_send:
-            time.sleep(2)
-            try:
-                cred = self.load_conf_file('config.yml')
-                client = Client(cred[1]['TWILIO_ACCOUNT_SID'], cred[1]['TWILIO_AUTH_TOKEN'])
-                message = client.messages.create(
-                    body=self.sms_box.toPlainText(),
-                    from_='+18479840485',
-                    to='+' + single_phone
-                )
-                status = self.send_status.setText(message.status)
-                time.sleep(3)
-                status = self.send_status.setText('Send successfully')
+        if len(phone_numbers_to_send) > 0:
+            for single_phone in phone_numbers_to_send:
+                time.sleep(2)
+                try:
+                    if self.sms_box.toPlainText() == '':
+                        self.send_status.setText(f'Please type message to proceed!')
+                        self.send_status.setStyleSheet('color: red')
+                    else:
+                        cred = self.load_conf_file('config.yml')
+                        client = Client(cred[1]['TWILIO_ACCOUNT_SID'], cred[1]['TWILIO_AUTH_TOKEN'])
+                        message = client.messages.create(
+                            body=self.sms_box.toPlainText(),
+                            from_='+18479840485',
+                            to='+' + single_phone
+                        )
+                        self.send_status.setText(message.status)
+                        time.sleep(3)
+                        self.send_status.setText('Send successfully')
+                except:
+                    self.send_status.setText(f'Unable to send to +{single_phone} check your number')
+                    self.send_status.setStyleSheet('color: red')
+        else:
+            self.send_status.setText('Please upload numbers to continue!')
+            self.send_status.setStyleSheet('color: red')
 
-            except:
-                status = self.send_status.setText(f'Unable to send to +{single_phone} check your number')
-                self.send_status.setStyleSheet('color: red')
+
+class settingsScreen(QMainWindow):
+    def __init__(self):
+        super(settingsScreen, self).__init__()
+        loadUi('settings.ui', self)
+        self.back_settings.clicked.connect(self.goto_homepage)
+        self.save_crd.clicked.connect(self.save_config)
+        self.clear_crd.clicked.connect(self.delete_crd)
+
+    def goto_homepage(self):
+        homes = Home()
+        widget.addWidget(homes)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def save_config(self):
+        try:
+            with open('config.yml', "r") as f:
+                config = yaml.safe_load(f)
+                API_DATA = [i["API_DATA"] for i in config]
+                unique_sid = [n['TWILIO_ACCOUNT_SID'] for n in API_DATA]
+
+            if self.twillio_sid.text() == '' or self.twillio_token.text() == '' or self.twillio_phone.text() == '':
+                self.set_status.setText('Check your Credentials, all fields are required!')
+                self.set_status.setStyleSheet('color: red')
+
+            elif self.twillio_sid.text() not in unique_sid:
+                p = {
+                    'API_DATA': {
+                        'TWILIO_ACCOUNT_SID': self.twillio_sid.text(),
+                        'TWILIO_AUTH_TOKEN': self.twillio_token.text(),
+                        'Sender_Phone': self.twillio_phone.text()
+                    }
+                }
+                with open('config.yml', 'a') as f:
+                    yaml.dump([p], f)
+                self.set_status.setText('Credentials saved successfully!')
+                self.set_status.setStyleSheet('color: green')
+            else:
+                self.set_status.setText('Twillio account sid already saved!')
+                self.set_status.setStyleSheet('color: red')
+        except FileNotFoundError:
+            p = {
+                'API_DATA': {
+                    'TWILIO_ACCOUNT_SID': self.twillio_sid.text(),
+                    'TWILIO_AUTH_TOKEN': self.twillio_token.text(),
+                    'Sender_Phone': self.twillio_phone.text()
+                }
+            }
+            with open('config.yml', 'w') as f:
+                yaml.dump([p], f)
+            self.set_status.setText('Credentials saved successfully!')
+            self.set_status.setStyleSheet('color: green')
+        self.twillio_sid.clear()
+        self.twillio_token.clear()
+        self.twillio_phone.clear()
+
+    def delete_crd(self):
+        os.remove('config.yml')
+        self.set_status.setText('Configuration deleted successfully')
+        self.set_status.setStyleSheet('color: green')
 
 
 # main
